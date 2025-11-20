@@ -2,17 +2,45 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Lake Ice Study – Home</title>
+  <title>Lake Ice Study – Overview</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      max-width: 800px;
+      max-width: 1000px;
       margin: auto;
       padding: 20px;
       line-height: 1.5;
     }
-    h1, p, ul {
+    h1, h2, h3 {
       text-align: center;
+    }
+    img {
+      max-width: 100%;
+      display: block;
+      margin: 0 auto 20px auto;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .lake-section {
+      margin-top: 40px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px 8px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+    .lake-link {
+      text-align: center;
+      margin-top: 8px;
     }
     a {
       color: #004c99;
@@ -27,12 +55,137 @@
 
 <h1>Lake Ice Study – Overview</h1>
 
-<p>If you can see this page, GitHub Pages is working.</p>
+<h2>Study Area Map</h2>
+<img src="Background/Study_areas_map.png" alt="Study area map">
 
-<ul>
-  <li><a href="Background/Study_areas_map.png">View study area map (raw image)</a></li>
-  <li><a href="Lake%20Athabasca/">Go to Lake Athabasca animations</a></li>
-</ul>
+<p style="text-align:center;">
+  Below are the ice periods for each study lake (from CSV files), and links to
+  their corresponding animation pages (freeze-up and break-up).
+</p>
+
+<!-- Lake sections – tables will be filled via JavaScript -->
+
+<div class="lake-section" id="GBL">
+  <h2>Great Bear Lake (GBL)</h2>
+  <div class="lake-link">
+    <a href="GBL/">Go to Great Bear Lake animations</a>
+  </div>
+  <div class="table-container"></div>
+</div>
+
+<div class="lake-section" id="GSL">
+  <h2>Great Slave Lake (GSL)</h2>
+  <div class="lake-link">
+    <a href="GSL/">Go to Great Slave Lake animations</a>
+  </div>
+  <div class="table-container"></div>
+</div>
+
+<div class="lake-section" id="Athabasca">
+  <h2>Lake Athabasca</h2>
+  <div class="lake-link">
+    <a href="Athabasca/">Go to Lake Athabasca animations</a>
+  </div>
+  <div class="table-container"></div>
+</div>
+
+<div class="lake-section" id="Winnipeg">
+  <h2>Lake Winnipeg</h2>
+  <div class="lake-link">
+    <a href="Winnipeg/">Go to Lake Winnipeg animations</a>
+  </div>
+  <div class="table-container"></div>
+</div>
+
+<div class="lake-section" id="Huron">
+  <h2>Lake Huron</h2>
+  <div class="lake-link">
+    <a href="Huron/">Go to Lake Huron animations</a>
+  </div>
+  <div class="table-container"></div>
+</div>
+
+<div class="lake-section" id="Superior">
+  <h2>Lake Superior</h2>
+  <div class="lake-link">
+    <a href="Superior/">Go to Lake Superior animations</a>
+  </div>
+  <div class="table-container"></div>
+</div>
+
+<div class="lake-section" id="Erie">
+  <h2>Lake Erie</h2>
+  <div class="lake-link">
+    <a href="Erie/">Go to Lake Erie animations</a>
+  </div>
+  <div class="table-container"></div>
+</div>
+
+<script>
+// configuration: lake id, csv filename (in Background folder)
+const lakes = [
+  { id: "GBL",       csv: "GBL_start_end_updated.csv" },
+  { id: "GSL",       csv: "GSL_start_end_updated.csv" },
+  { id: "Athabasca", csv: "Athabasca_start_end_updated.csv" },
+  { id: "Winnipeg",  csv: "Winnipeg_start_end_updated.csv" },
+  { id: "Huron",     csv: "Huron_start_end_updated.csv" },
+  { id: "Superior",  csv: "Superior_start_end_updated.csv" },
+  { id: "Erie",      csv: "Erie_start_end_updated.csv" }
+];
+
+// simple CSV → table loader
+function loadCsvIntoSection(lake) {
+  const section = document.getElementById(lake.id);
+  const container = section.querySelector(".table-container");
+  const csvPath = "Background/" + lake.csv;
+
+  fetch(csvPath)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Could not load " + csvPath);
+      }
+      return response.text();
+    })
+    .then(text => {
+      const rows = text.trim().split(/\r?\n/).map(r => r.split(","));
+      if (rows.length === 0) return;
+
+      const table = document.createElement("table");
+
+      // header
+      const thead = document.createElement("thead");
+      const headerRow = document.createElement("tr");
+      rows[0].forEach(col => {
+        const th = document.createElement("th");
+        th.textContent = col;
+        headerRow.appendChild(th);
+      });
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      // body
+      const tbody = document.createElement("tbody");
+      for (let i = 1; i < rows.length; i++) {
+        const tr = document.createElement("tr");
+        rows[i].forEach(col => {
+          const td = document.createElement("td");
+          td.textContent = col;
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      }
+      table.appendChild(tbody);
+
+      container.appendChild(table);
+    })
+    .catch(err => {
+      console.warn(err);
+      container.textContent = "Unable to load CSV: " + lake.csv;
+    });
+}
+
+lakes.forEach(loadCsvIntoSection);
+</script>
 
 </body>
 </html>
