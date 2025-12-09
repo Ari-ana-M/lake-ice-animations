@@ -1,1 +1,101 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Lake Superior – Ice Animations</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
+    h1, h2, h3 {
+      text-align: center;
+    }
+    .nav-links {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .nav-links a {
+      margin: 0 10px;
+    }
+    .gif-container {
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    img {
+      max-width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+    a {
+      color: #004c99;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    p.desc {
+      text-align: center;
+      font-style: italic;
+      margin-top: 4px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Lake Superior – Ice Animations</h1>
+
+<p style="text-align:center;"><a href="../">← Back to main overview</a></p>
+
+<div class="nav-links">
+  <a href="#freeze-up">Freeze-up</a> |
+  <a href="#break-up">Break-up</a>
+</div>
+
+<!-- FREEZE-UP SECTION -->
+<h2 id="freeze-up">Freeze-up</h2>
+<p class="desc">Freeze-up describes lake ice formation.</p>
+
+<div id="freeze-container"></div>
+
+<script>
+  const years = Array.from({length: 20}, (_, i) => 2004 + i);
+
+  const freezeContainer = document.getElementById("freeze-container");
+  years.forEach(year => {
+    freezeContainer.innerHTML += `
+      <div class="gif-container">
+        <h3>${year}</h3>
+        <img src="Freeze-up/Updated_Superior_${year}_A_Freeze-up_animation.gif"
+             alt="Lake Superior Freeze-up ${year}">
+      </div>
+    `;
+  });
+</script>
+
+<!-- BREAK-UP SECTION -->
+<h2 id="break-up">Break-up</h2>
+<p class="desc">Break-up describes lake ice melt.</p>
+
+<div id="breakup-container"></div>
+
+<script>
+  const breakupContainer = document.getElementById("breakup-container");
+  years.forEach(year => {
+    breakupContainer.innerHTML += `
+      <div class="gif-container">
+        <h3>${year}</h3>
+        <img src="Break-up/Updated_Superior_${year}_A_Break-up_animation.gif"
+             alt="Lake Superior Break-up ${year}">
+      </div>
+    `;
+  });
+</script>
+
+</body>
+</html>
