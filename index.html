@@ -22,7 +22,6 @@
       border-radius: 6px;
     }
 
-    /* >>> ADD THIS: callout box styling <<< */
     .callout-box {
       border: 2px solid #4a90e2;
       background-color: #f7faff;
@@ -38,18 +37,81 @@
       margin: 0 0 10px 0;
       text-align: center;
     }
-    /* >>> END OF CALL OUT BOX STYLING <<< */
 
+    /* ── Table styling ── */
+    .table-container {
+      margin: 16px 0 28px 0;
+      overflow-x: auto;           /* horizontal scroll on small screens */
+    }
+
+    .table-container table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      border-radius: 6px;
+      overflow: hidden;           /* keeps border-radius visible */
+    }
+
+    .table-container thead {
+      background-color: #4a90e2;
+      color: #fff;
+    }
+
+    .table-container thead th {
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+      white-space: nowrap;
+      border-right: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .table-container thead th:last-child {
+      border-right: none;
+    }
+
+    .table-container tbody tr {
+      border-bottom: 1px solid #e4eaf2;
+    }
+
+    .table-container tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    /* zebra striping */
+    .table-container tbody tr:nth-child(even) {
+      background-color: #f3f7fd;
+    }
+
+    .table-container tbody tr:hover {
+      background-color: #ddeeff;
+    }
+
+    .table-container tbody td {
+      padding: 9px 14px;
+      border-right: 1px solid #e4eaf2;
+      white-space: nowrap;
+    }
+
+    .table-container tbody td:last-child {
+      border-right: none;
+    }
+
+    /* lake section link */
+    .lake-link {
+      text-align: center;
+      margin-bottom: 8px;
+    }
   </style>
 </head>
 <body>
 
-<!-- >>> CALL OUT BOX GOES DIRECTLY UNDER YOUR TITLE <<< -->
 <h1>Lake Ice Study – Overview</h1>
 
 <div class="callout-box">
   <p>
-    <strong>Supplementary materials for “Assessment of ERA5-Land Lake Ice Related Variables from Satellite Observations,” 
+    <strong>Supplementary materials for "Assessment of ERA5-Land Lake Ice Related Variables from Satellite Observations," 
     Ariana Mansingh, M.Sc. Thesis.</strong>
   </p>
   <p>
@@ -60,11 +122,9 @@
     with NOAA ice fraction.
   </p>
 </div>
-<!-- >>> END OF CALLOUT BOX INSERT <<< -->
 
 <h2>Study Area Map</h2>
 <img src="Background/Study_areas_map.png" alt="Study area map">
-
 
 <p style="text-align:center;">
   Below are the ice periods for each study lake (from CSV files), and links to
@@ -130,7 +190,6 @@
 </div>
 
 <script>
-// configuration: lake id, csv filename (in Background folder)
 const lakes = [
   { id: "GBL",       csv: "GBL_start_end_updated.csv" },
   { id: "GSL",       csv: "GSL_start_end_updated.csv" },
@@ -141,7 +200,6 @@ const lakes = [
   { id: "Erie",      csv: "Erie_start_end_updated.csv" }
 ];
 
-// simple CSV → table loader
 function loadCsvIntoSection(lake) {
   const section = document.getElementById(lake.id);
   const container = section.querySelector(".table-container");
@@ -149,9 +207,7 @@ function loadCsvIntoSection(lake) {
 
   fetch(csvPath)
     .then(response => {
-      if (!response.ok) {
-        throw new Error("Could not load " + csvPath);
-      }
+      if (!response.ok) throw new Error("Could not load " + csvPath);
       return response.text();
     })
     .then(text => {
@@ -165,7 +221,7 @@ function loadCsvIntoSection(lake) {
       const headerRow = document.createElement("tr");
       rows[0].forEach(col => {
         const th = document.createElement("th");
-        th.textContent = col;
+        th.textContent = col.trim();
         headerRow.appendChild(th);
       });
       thead.appendChild(headerRow);
@@ -177,13 +233,12 @@ function loadCsvIntoSection(lake) {
         const tr = document.createElement("tr");
         rows[i].forEach(col => {
           const td = document.createElement("td");
-          td.textContent = col;
+          td.textContent = col.trim();
           tr.appendChild(td);
         });
         tbody.appendChild(tr);
       }
       table.appendChild(tbody);
-
       container.appendChild(table);
     })
     .catch(err => {
